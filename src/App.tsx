@@ -104,7 +104,7 @@ const BRANDS = [
     desc: 'Pokémon TCG, One Piece, Magic. El coleccionismo como cultura.',
     tags: ['TCG', 'Pokémon'],
     color: '#34D399',
-    img: 'https://images.unsplash.com/photo-1606503153255-59d5e417b05b?auto=format&fit=crop&w=700&q=80',
+    img: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=700&q=80',
     venues: [] as Venue[],
   },
 ]
@@ -228,7 +228,7 @@ export default function App() {
         <video className="absolute inset-0 w-full h-full object-cover" src={VIDEO_URL} autoPlay muted loop playsInline />
         {/* Overlay — top darkens slightly, bottom fades to bg */}
         <div className="absolute inset-0" style={{
-          background: `linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.45) 55%, ${p.bg} 100%)`
+          background: `linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.50) 55%, rgba(0,0,0,0.72) 100%)`
         }} />
         {/* Content — vertically centered with equal padding */}
         <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6 py-20">

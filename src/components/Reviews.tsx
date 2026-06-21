@@ -45,15 +45,42 @@ function timeAgo(unix: number) {
   return `Hace ${Math.floor(days / 365)} año${Math.floor(days / 365) !== 1 ? 's' : ''}`
 }
 
-// ── Datos de muestra mientras no hay API key ───────────────
+// ── Reseñas reales de Google ────────────────────────────────
 const PLACEHOLDER: PlaceData = {
   name: 'Noches Mad',
-  rating: 4.6,
-  user_ratings_total: 312,
+  rating: 4.8,
+  user_ratings_total: 31,
   reviews: [
-    { author_name: 'Laura M.', rating: 5, text: 'El mejor plan de Madrid para salir de noche. Las entradas siempre bien organizadas y el ambiente increíble.', time: Date.now() / 1000 - 86400 * 3, profile_photo_url: '' },
-    { author_name: 'Carlos R.', rating: 5, text: 'Llevamos usando sus eventos toda la temporada. Muy buena selección de salas y precios muy competitivos.', time: Date.now() / 1000 - 86400 * 12, profile_photo_url: '' },
-    { author_name: 'Marta G.', rating: 4, text: 'Todo perfecto, entradas rápidas y el personal muy atento. La app de reservas funciona genial.', time: Date.now() / 1000 - 86400 * 22, profile_photo_url: '' },
+    {
+      author_name: 'Javier Cerezo', rating: 5,
+      text: 'Son increíbles, llevan las mejores discotecas de Madrid, rapidísimos en contestar, te organizan fiestas privadas con lo que necesites, te consiguen DJ, azafatas para eventos y muchos servicios más. Muy profesionales. Logan es impresionante.',
+      time: Date.now() / 1000 - 86400 * 8, profile_photo_url: '',
+    },
+    {
+      author_name: 'Aitana Facello Valdés', rating: 5,
+      text: 'Un servicio impecable, profesional y muy cercano. Todo salió genial en nuestra graduación, gracias a su profesionalidad y buena organización. Hicieron que todo fuera muy fácil y cómodo para nosotros. Definitivamente los elegiríamos de nuevo para otro evento.',
+      time: Date.now() / 1000 - 86400 * 14, profile_photo_url: '',
+    },
+    {
+      author_name: 'Alejandro Rodríguez Delgado', rating: 5,
+      text: 'Muchas gracias a todo el equipo, en especial a Gonzalo, por coordinar la graduación de mi facultad, la fiesta fue increíble y todos quedaron encantados.',
+      time: Date.now() / 1000 - 86400 * 21, profile_photo_url: '',
+    },
+    {
+      author_name: 'Nicolás Cano-Astorga', rating: 5,
+      text: 'Gracias a NochesMad, el colectivo de DJs del que formo parte pudimos realizar una fiesta en una discoteca madrileña. El evento fue un éxito para todas las partes implicadas. Recomiendo su mediación puesto que son todo facilidades, claridad y apoyo.',
+      time: Date.now() / 1000 - 86400 * 35, profile_photo_url: '',
+    },
+    {
+      author_name: 'María Rodríguez', rating: 5,
+      text: '¡Excelente gestión! Están al día de muchos eventos y nos organizaron una fiesta privada que salió de maravilla. Gonzalo es muy atento y consiguió que todo saliera perfecto.',
+      time: Date.now() / 1000 - 86400 * 42, profile_photo_url: '',
+    },
+    {
+      author_name: 'Patri Fariña', rating: 5,
+      text: 'He colaborado con Gonzalo en múltiples ocasiones, y siempre ha solucionado mis peticiones y cumplido lo que ofrecía en un primer momento. Recomiendo la organización de fiestas de graduación.',
+      time: Date.now() / 1000 - 86400 * 60, profile_photo_url: '',
+    },
   ],
 }
 
