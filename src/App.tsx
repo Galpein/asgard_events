@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { ArrowUpRight, Crown, X, ChevronDown } from 'lucide-react'
+import { ArrowUpRight, X, ChevronDown } from 'lucide-react'
 import Reviews from './components/Reviews'
 
 const VIDEO_URL = '/hero.mp4'
@@ -220,26 +220,15 @@ export default function App() {
         </div>
       </div>
 
-      {/* Spacer: reserva el hueco de la navbar para que no tape el hero */}
-      <div style={{ height: '72px', background: p.bg }} />
-
       {/* ── HERO ─────────────────────────────────────── */}
       <section className="relative overflow-hidden" style={{ height: 'clamp(460px, 65vh, 780px)' }}>
         <video className="absolute inset-0 w-full h-full object-cover" src={VIDEO_URL} autoPlay muted loop playsInline />
-        {/* Overlay — top darkens slightly, bottom fades to bg */}
         <div className="absolute inset-0" style={{
-          background: `linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.50) 55%, rgba(0,0,0,0.72) 100%)`
+          background: `linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.55) 55%, rgba(0,0,0,0.75) 100%)`
         }} />
-        {/* Content — vertically centered with equal padding */}
-        <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6 py-20">
-          <div className="flex items-center gap-2 mb-8 animate-fade-up">
-            <Crown className="w-3.5 h-3.5" style={{ color: 'rgba(255,255,255,0.55)' }} />
-            <span className="font-inter text-[11px] tracking-[0.32em] uppercase" style={{ color: 'rgba(255,255,255,0.55)' }}>
-              Madrid · Cinco Marcas · Un Ecosistema
-            </span>
-          </div>
-          <h1 className="font-podium text-white uppercase leading-[0.88] animate-fade-up-delay-1"
-            style={{ fontSize: 'clamp(3.8rem, 12vw, 10.5rem)' }}>
+        <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6">
+          <h1 className="font-podium text-white uppercase leading-[0.88] animate-fade-up"
+            style={{ fontSize: 'clamp(2.6rem, 7vw, 6.5rem)' }}>
             Siente.<br />Vibra.<br />Madrid.
           </h1>
         </div>
