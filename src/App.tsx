@@ -130,7 +130,7 @@ export default function App() {
   const brand = activeBrand >= 0 ? BRANDS[activeBrand] : null
 
   return (
-    <div className="bg-[#0c0c0c] text-white overflow-x-hidden">
+    <div className="bg-[#141414] text-white overflow-x-hidden">
 
       {/* ── NAV ────────────────────────────────────── */}
       <nav className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 sm:px-10 lg:px-16 py-5 transition-all duration-400 ${
@@ -179,30 +179,22 @@ export default function App() {
       </div>
 
       {/* ── HERO ───────────────────────────────────── */}
-      <section className="relative overflow-hidden" style={{ height: 'clamp(360px, 55vh, 600px)' }}>
+      <section className="relative overflow-hidden" style={{ height: 'clamp(420px, 65vh, 720px)' }}>
         <video className="absolute inset-0 w-full h-full object-cover" src={VIDEO_URL} autoPlay muted loop playsInline />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/50 to-[#0c0c0c]" />
-        <div className="relative z-10 h-full flex flex-col justify-center px-6 sm:px-10 lg:px-16 pt-20">
-          <div className="flex items-center gap-2 mb-4 animate-fade-up">
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/55 to-[#141414]" />
+        <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6 pt-20">
+          <div className="flex items-center gap-2 mb-6 animate-fade-up">
             <Crown className="w-3.5 h-3.5 text-white/50" />
             <span className="font-inter text-[11px] text-white/50 tracking-[0.3em] uppercase">Madrid · Cinco Marcas · Un Ecosistema</span>
           </div>
-          <h1 className="font-podium text-white uppercase leading-[0.9] animate-fade-up-delay-1" style={{ fontSize: 'clamp(2.6rem,7vw,6rem)' }}>
+          <h1 className="font-podium text-white uppercase leading-[0.88] animate-fade-up-delay-1" style={{ fontSize: 'clamp(3.5rem,11vw,9.5rem)' }}>
             Siente.<br />Vibra.<br />Madrid.
           </h1>
-          <div className="flex gap-3 mt-8 animate-fade-up-delay-2">
-            <a href="#marcas" className="flex items-center gap-2 bg-white text-black px-5 py-3 font-inter text-xs font-semibold tracking-widest uppercase hover:bg-white/90 transition-colors">
-              VER MARCAS <ArrowUpRight className="w-3.5 h-3.5" />
-            </a>
-            <a href="#contacto" className="flex items-center gap-2 border border-white/25 text-white px-5 py-3 font-inter text-xs tracking-widest uppercase hover:border-white/50 transition-colors">
-              CONTACTO
-            </a>
-          </div>
         </div>
       </section>
 
       {/* ── MARQUEE ────────────────────────────────── */}
-      <div className="border-y border-white/[0.05] bg-[#0e0e0e] overflow-hidden py-3.5">
+      <div className="border-y border-white/[0.07] bg-[#1c1c1c] overflow-hidden py-3.5">
         <div className="flex whitespace-nowrap" style={{ animation: 'marquee 28s linear infinite' }}>
           {[...MARQUEE_ITEMS, ...MARQUEE_ITEMS].map((item, i) => (
             <span key={i} className="font-podium text-white/35 uppercase text-sm tracking-widest mx-8 flex-shrink-0">
@@ -242,7 +234,7 @@ export default function App() {
                     />
 
                     {/* Gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
 
                     {/* Active border */}
                     <div
@@ -306,7 +298,7 @@ export default function App() {
           {/* Venue expansion panel */}
           {brand && (
             <div
-              className="mt-3 border-t-2 bg-white/[0.02] p-6 sm:p-8"
+              className="mt-3 border-t-2 bg-white/[0.04] p-6 sm:p-8"
               style={{ borderColor: brand.color }}
             >
               {brand.venues.length > 0 ? (
@@ -357,7 +349,7 @@ export default function App() {
       </div>
 
       {/* ── FOOTER / CONTACTO ──────────────────────── */}
-      <footer id="contacto" className="border-t border-white/[0.06] px-6 sm:px-10 lg:px-16 pt-16 pb-10 bg-[#080808]">
+      <footer id="contacto" className="border-t border-white/[0.06] px-6 sm:px-10 lg:px-16 pt-16 pb-10 bg-[#161616]">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr] gap-12 pb-14 border-b border-white/[0.06] mb-8">
 
