@@ -8,52 +8,34 @@ interface Venue { name: string; url: string }
 /* ── Paletas ─────────────────────────────────────────────── */
 const PALETTES = [
   {
-    id: 'grafito',
-    label: 'Grafito',
-    swatch: '#2a2a2a',
-    bg:         '#1c1c1c',
-    bgAlt:      '#242424',
-    bgPanel:    '#2a2a2a',
-    fg:         '#ffffff',
-    fgMuted:    'rgba(255,255,255,0.42)',
-    fgSub:      'rgba(255,255,255,0.22)',
-    border:     'rgba(255,255,255,0.08)',
-    borderHover:'rgba(255,255,255,0.22)',
-    nav:        'rgba(20,20,20,0.88)',
-    heroBtnBg:  '#ffffff',
-    heroBtnFg:  '#000000',
-  },
-  {
-    id: 'claro',
-    label: 'Claro',
-    swatch: '#f0ede7',
-    bg:         '#f0ede7',
-    bgAlt:      '#ffffff',
-    bgPanel:    '#e8e4dd',
-    fg:         '#111111',
-    fgMuted:    'rgba(0,0,0,0.48)',
-    fgSub:      'rgba(0,0,0,0.28)',
-    border:     'rgba(0,0,0,0.1)',
-    borderHover:'rgba(0,0,0,0.28)',
-    nav:        'rgba(235,232,225,0.92)',
-    heroBtnBg:  '#111111',
-    heroBtnFg:  '#ffffff',
-  },
-  {
     id: 'navy',
-    label: 'Navy',
-    swatch: '#060d24',
+    label: 'Oscuro',
     bg:         '#060d24',
     bgAlt:      '#0b1530',
     bgPanel:    '#101c3a',
     fg:         '#ffffff',
-    fgMuted:    'rgba(180,205,255,0.48)',
-    fgSub:      'rgba(140,170,255,0.28)',
-    border:     'rgba(80,130,255,0.14)',
-    borderHover:'rgba(120,170,255,0.35)',
-    nav:        'rgba(6,13,36,0.9)',
+    fgMuted:    'rgba(180,205,255,0.50)',
+    fgSub:      'rgba(140,170,255,0.30)',
+    border:     'rgba(80,130,255,0.15)',
+    borderHover:'rgba(120,170,255,0.40)',
+    nav:        'rgba(6,13,36,0.92)',
     heroBtnBg:  '#ffffff',
     heroBtnFg:  '#060d24',
+  },
+  {
+    id: 'claro',
+    label: 'Claro',
+    bg:         '#f0ede7',
+    bgAlt:      '#ffffff',
+    bgPanel:    '#e8e4dd',
+    fg:         '#111111',
+    fgMuted:    'rgba(0,0,0,0.50)',
+    fgSub:      'rgba(0,0,0,0.30)',
+    border:     'rgba(0,0,0,0.10)',
+    borderHover:'rgba(0,0,0,0.30)',
+    nav:        'rgba(235,232,225,0.94)',
+    heroBtnBg:  '#111111',
+    heroBtnFg:  '#ffffff',
   },
 ]
 
@@ -179,29 +161,16 @@ export default function App() {
   return (
     <div style={{ background: p.bg, color: p.fg }} className="overflow-x-hidden min-h-screen">
 
-      {/* ── Palette switcher (floating bottom-right) ── */}
-      <div className="fixed bottom-5 right-5 z-[70] flex items-center gap-1.5 px-3 py-2 rounded-full shadow-xl backdrop-blur-md"
-        style={{ background: p.bgPanel, border: `1px solid ${p.border}` }}>
-        <span className="font-inter text-[9px] tracking-widest uppercase mr-1" style={{ color: p.fgSub }}>Tema</span>
-        {PALETTES.map((pal, i) => (
-          <button
-            key={pal.id}
-            onClick={() => setPaletteIdx(i)}
-            title={pal.label}
-            className="w-5 h-5 rounded-full transition-all duration-200 flex-shrink-0"
-            style={{
-              background: pal.swatch,
-              border: paletteIdx === i ? `2px solid ${p.fg}` : `2px solid transparent`,
-              outline: paletteIdx === i ? `1px solid ${p.fgSub}` : 'none',
-              outlineOffset: '2px',
-              transform: paletteIdx === i ? 'scale(1.2)' : 'scale(1)',
-            }}
-          />
-        ))}
-        <span className="font-inter text-[10px] tracking-wider ml-1" style={{ color: p.fgMuted }}>
-          {p.label}
-        </span>
-      </div>
+      {/* ── Toggle claro/oscuro (floating bottom-right) ── */}
+      <button
+        onClick={() => setPaletteIdx(i => (i + 1) % 2)}
+        className="fixed bottom-5 right-5 z-[70] flex items-center gap-2 px-3.5 py-2 rounded-full shadow-lg backdrop-blur-md transition-all duration-300"
+        style={{ background: p.bgPanel, border: `1px solid ${p.border}`, color: p.fgMuted }}
+        title={`Cambiar a modo ${PALETTES[(paletteIdx + 1) % 2].label}`}
+      >
+        <span className="text-base leading-none">{paletteIdx === 0 ? '☀︎' : '◗'}</span>
+        <span className="font-inter text-[10px] tracking-widest uppercase">{PALETTES[(paletteIdx + 1) % 2].label}</span>
+      </button>
 
       {/* ── NAV ──────────────────────────────────────── */}
       <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 sm:px-10 lg:px-16 py-5 transition-all duration-400"
@@ -251,8 +220,11 @@ export default function App() {
         </div>
       </div>
 
+      {/* Spacer: reserva el hueco de la navbar para que no tape el hero */}
+      <div style={{ height: '72px', background: p.bg }} />
+
       {/* ── HERO ─────────────────────────────────────── */}
-      <section className="relative overflow-hidden" style={{ height: 'clamp(520px, 72vh, 860px)' }}>
+      <section className="relative overflow-hidden" style={{ height: 'clamp(460px, 65vh, 780px)' }}>
         <video className="absolute inset-0 w-full h-full object-cover" src={VIDEO_URL} autoPlay muted loop playsInline />
         {/* Overlay — top darkens slightly, bottom fades to bg */}
         <div className="absolute inset-0" style={{
