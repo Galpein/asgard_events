@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { ArrowUpRight, Award, Crown, X, MapPin, Clock, ChevronRight } from 'lucide-react'
+import { ArrowUpRight, Crown, X, MapPin, Clock, ChevronRight } from 'lucide-react'
 import Reviews from './components/Reviews'
 
 const VIDEO_URL = '/hero.mp4'
