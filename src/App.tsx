@@ -1,7 +1,11 @@
 import { useState, useEffect, useRef } from 'react'
 import { ArrowUpRight, Award, Crown, X, MapPin, Clock, ChevronRight } from 'lucide-react'
+import Reviews from './components/Reviews'
 
 const VIDEO_URL = '/hero.mp4'
+
+interface Venue { name: string; url: string }
+
 const NAV_LINKS = [
   { label: 'Marcas',   href: '#marcas' },
   { label: 'Eventos',  href: '#eventos' },
@@ -15,10 +19,11 @@ const BRANDS = [
     num: '01',
     name: 'Bellaqueo',
     age: 'Todos los públicos',
-    desc: 'La fiesta más vibrante del ecosistema. Reggaeton, afrobeats y urbano sin límites. Una experiencia que arrastra.',
+    desc: 'La fiesta más vibrante del ecosistema. Reggaeton, afrobeats y urbano sin límites.',
     tags: ['Reggaeton', 'Afrobeats', 'Urbano'],
     color: '#FF2D6B',
     img: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=900&q=80',
+    venues: [] as Venue[],
   },
   {
     id: 'glass',
@@ -29,6 +34,7 @@ const BRANDS = [
     tags: ['First Night', 'Seguro', 'Madrid'],
     color: '#00C2FF',
     img: 'https://images.unsplash.com/photo-1544785349-c4a5301826fd?auto=format&fit=crop&w=900&q=80',
+    venues: [] as Venue[],
   },
   {
     id: 'nochesmad',
@@ -39,26 +45,47 @@ const BRANDS = [
     tags: ['Madrid', 'Gen Z', 'Tendencia'],
     color: '#7B3FE4',
     img: 'https://images.unsplash.com/photo-1578736641330-3155e606cd40?auto=format&fit=crop&w=900&q=80',
+    venues: [
+      { name: 'STARLITE',         url: 'https://www.fourvenues.com/logan@starlite' },
+      { name: 'LA SANTA',         url: 'https://www.fourvenues.com/es/equipo-nochesmad@la-santa-madrid' },
+      { name: 'BONDED',           url: 'https://www.fourvenues.com/es/equipo-nochesmad@bonded' },
+      { name: 'CATS',             url: 'https://www.fourvenues.com/es/equipo-nochesmad@cats-madrid' },
+      { name: 'CHAMÁN',           url: 'https://www.fourvenues.com/es/equipo-nochesmad@chaman' },
+      { name: 'EPOKA',            url: 'https://www.fourvenues.com/es/equipo-nochesmad@epoka-the-club' },
+      { name: 'FITZ MADRID',      url: 'https://www.fourvenues.com/es/equipo-nochesmad@fitz-madrid' },
+      { name: 'GABANA MIÉRCOLES', url: 'https://www.fourvenues.com/es/equipo-nochesmad@gabana' },
+      { name: 'HABANERA JUEVES',  url: 'https://www.fourvenues.com/es/logan@night-out-events-1' },
+      { name: 'LULA',             url: 'https://web.fourvenues.com/es/equipo-nochesmad@lula-club' },
+      { name: 'MARVEL',           url: 'https://www.fourvenues.com/es/equipo-nochesmad@marvel-madrid' },
+      { name: 'PANDA',            url: 'https://web.fourvenues.com/es/equipo-nochesmad@panda1' },
+      { name: 'MON',              url: 'https://www.fourvenues.com/es/equipo-nochesmad@sala-mon' },
+      { name: 'OH MY CLUB',       url: 'https://www.fourvenues.com/es/equipo-nochesmad@oh-my-club' },
+      { name: 'MORRIS',           url: 'https://www.fourvenues.com/es/equipo-nochesmad@morris' },
+      { name: 'TIFFANYS',         url: 'https://www.fourvenues.com/es/equipo-nochesmad@tiffanys-the-club1' },
+      { name: 'VANDIDO',          url: 'https://www.fourvenues.com/es/equipo-nochesmad@vandido' },
+    ] as Venue[],
   },
   {
     id: 'affair',
     num: '04',
     name: 'Affair',
     age: '+24 años',
-    desc: 'Para quienes saben lo que quieren. Sofisticación, selección musical y ambiente cuidado hasta el último detalle.',
+    desc: 'Para quienes saben lo que quieren. Sofisticación, selección musical y ambiente cuidado al detalle.',
     tags: ['Premium', 'Exclusivo', 'Sofisticado'],
     color: '#FFB020',
     img: 'https://images.unsplash.com/photo-1553190842-24c3f93ba116?auto=format&fit=crop&w=900&q=80',
+    venues: [] as Venue[],
   },
   {
     id: 'geek',
     num: '05',
     name: 'Gen Z Geek',
     age: 'TCG · Coleccionismo',
-    desc: 'Pokémon, One Piece TCG, Magic: The Gathering. El coleccionismo de cartas como cultura viva y comunidad real.',
+    desc: 'Pokémon, One Piece TCG, Magic: The Gathering. El coleccionismo de cartas como cultura viva.',
     tags: ['Pokémon TCG', 'OPTCG', 'MTG'],
     color: '#00D48A',
     img: 'https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?auto=format&fit=crop&w=900&q=80',
+    venues: [] as Venue[],
   },
 ]
 
@@ -110,7 +137,7 @@ const MARQUEE_ITEMS = ['Bellaqueo', 'Glass', 'Nochesmad', 'Affair', 'Gen Z Geek'
 
 export default function App() {
   const [menuOpen, setMenuOpen] = useState(false)
-  const [activeBrand, setActiveBrand] = useState(0)
+  const [activeBrand, setActiveBrand] = useState(-1)
   const [scrolled, setScrolled] = useState(false)
   const [email, setEmail] = useState('')
   const [submitted, setSubmitted] = useState(false)
@@ -189,46 +216,34 @@ export default function App() {
       {/* ═══════════════════════════════════════════════
           HERO — Fullscreen video
       ═══════════════════════════════════════════════ */}
-      <section className="relative w-full h-screen overflow-hidden">
+      <section className="relative w-full overflow-hidden" style={{ height: 'clamp(380px, 58vh, 640px)' }}>
         <video className="absolute inset-0 w-full h-full object-cover" src={VIDEO_URL} autoPlay muted loop playsInline />
-        <div className="absolute inset-0 bg-black/55" />
-        <div className="relative z-10 flex flex-col h-full">
-          <div className="flex-1 flex items-center px-6 sm:px-10 lg:px-16 pt-20 lg:pt-24">
-            <div className="max-w-3xl">
-              <div className="flex items-center gap-2 mb-6 lg:mb-8 animate-fade-up">
-                <Crown className="w-4 h-4 text-white/70" />
-                <span className="font-inter text-white/70 text-xs sm:text-sm tracking-[0.3em] uppercase">Madrid · Ocio Nocturno · Cinco Marcas</span>
-              </div>
-              <h1 className="font-podium text-white uppercase leading-[0.92] tracking-tight animate-fade-up-delay-1" style={{ fontSize: 'clamp(2.8rem, 8vw, 7rem)' }}>
-                Siente.<br />Vibra.<br />Madrid.
-              </h1>
-              <p className="font-inter text-white/70 text-sm sm:text-base leading-relaxed max-w-md mt-6 lg:mt-8 animate-fade-up-delay-2">
-                Cinco marcas. Un ecosistema.<br />
-                Cada noche pensada para ti —{' '}
-                <strong className="text-white font-semibold">nunca igual a la anterior.</strong>
-              </p>
-              <div className="flex flex-wrap items-center gap-4 sm:gap-6 mt-8 lg:mt-10 animate-fade-up-delay-3">
-                <a href="#eventos" className="group flex items-center gap-2 bg-black hover:bg-neutral-900 px-5 sm:px-7 py-3 sm:py-4 text-white text-[11px] sm:text-xs tracking-widest uppercase transition-colors duration-200">
-                  VER EVENTOS
-                  <ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                </a>
-                <div className="hidden sm:flex items-center gap-3">
-                  <Award className="w-8 h-8 text-white/50" />
-                  <div>
-                    <div className="font-inter text-white/60 text-xs tracking-wider uppercase">Promotora</div>
-                    <div className="font-inter text-white/60 text-xs tracking-wider uppercase">Nº1 Madrid</div>
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-wrap gap-6 sm:gap-12 lg:gap-16 mt-8 sm:mt-10 lg:mt-14 animate-fade-up-delay-4">
+        <div className="absolute inset-0 bg-black/60" />
+        <div className="relative z-10 flex flex-col h-full px-6 sm:px-10 lg:px-16 pt-20 justify-center">
+          <div className="max-w-3xl">
+            <div className="flex items-center gap-2 mb-4 animate-fade-up">
+              <Crown className="w-3.5 h-3.5 text-white/60" />
+              <span className="font-inter text-white/60 text-[11px] tracking-[0.3em] uppercase">Madrid · Ocio Nocturno · Cinco Marcas</span>
+            </div>
+            <h1 className="font-podium text-white uppercase leading-[0.92] tracking-tight animate-fade-up-delay-1" style={{ fontSize: 'clamp(2.4rem, 6vw, 5.5rem)' }}>
+              Siente.<br />Vibra.<br />Madrid.
+            </h1>
+            <div className="flex flex-wrap items-center gap-4 mt-6 animate-fade-up-delay-2">
+              <a href="#marcas" className="group flex items-center gap-2 bg-white text-black hover:bg-white/90 px-5 py-3 text-[11px] tracking-widest uppercase transition-colors duration-200 font-inter font-semibold">
+                VER MARCAS
+                <ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </a>
+              <a href="#eventos" className="group flex items-center gap-2 border border-white/30 hover:border-white/60 px-5 py-3 text-white text-[11px] tracking-widest uppercase transition-colors duration-200 font-inter">
+                EVENTOS
+              </a>
+              <div className="hidden sm:flex items-center gap-2 ml-2">
                 {[
-                  { value: '5',    label: 'Marcas Únicas' },
-                  { value: '+10K', label: 'Asistentes / Temp.' },
-                  { value: '∞',    label: 'Noches Irrepetibles' },
+                  { value: '5',    label: 'Marcas' },
+                  { value: '+10K', label: 'Asistentes' },
                 ].map(({ value, label }) => (
-                  <div key={label}>
-                    <div className="font-inter text-white text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight">{value}</div>
-                    <div className="font-inter text-white/50 text-[9px] sm:text-xs tracking-widest uppercase mt-1">{label}</div>
+                  <div key={label} className="flex items-baseline gap-1.5 border-l border-white/20 pl-4">
+                    <span className="font-inter text-white font-bold text-lg">{value}</span>
+                    <span className="font-inter text-white/40 text-[10px] tracking-widest uppercase">{label}</span>
                   </div>
                 ))}
               </div>
@@ -251,105 +266,135 @@ export default function App() {
       </div>
 
       {/* ═══════════════════════════════════════════════
-          MARCAS — Sticky showcase
+          MARCAS — Cards + venue grid
       ═══════════════════════════════════════════════ */}
-      <section id="marcas" className="py-24 lg:py-32 px-6 sm:px-10 lg:px-16">
-        <RevealBlock className="max-w-7xl mx-auto">
-          <div className="flex items-end justify-between mb-16 lg:mb-20 border-b border-white/[0.08] pb-10">
+      <section id="marcas" className="py-20 lg:py-28 px-6 sm:px-10 lg:px-16">
+        <div className="max-w-7xl mx-auto">
+
+          {/* Header */}
+          <RevealBlock className="flex items-end justify-between mb-10 pb-8 border-b border-white/[0.08]">
             <div>
-              <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/40 mb-3">Ecosistema de marcas</p>
-              <h2 className="font-podium uppercase text-white leading-[0.92]" style={{ fontSize: 'clamp(2.5rem,6vw,5.5rem)' }}>
+              <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/40 mb-3">Nuestras marcas</p>
+              <h2 className="font-podium uppercase text-white leading-[0.92]" style={{ fontSize: 'clamp(2.2rem,5vw,4.5rem)' }}>
                 Cinco marcas.<br />Un ecosistema.
               </h2>
             </div>
-            <span className="hidden md:block font-inter text-white/25 text-xs tracking-widest uppercase text-right leading-loose">
-              Cada marca,<br />un público,<br />un momento.
-            </span>
-          </div>
+          </RevealBlock>
 
-          {/* Tab bar */}
-          <div className="flex gap-1 mb-12 flex-wrap">
-            {BRANDS.map((b, i) => (
-              <button
-                key={b.id}
-                onClick={() => setActiveBrand(i)}
-                className={`font-inter text-xs tracking-widest uppercase px-4 py-2.5 border transition-all duration-200 ${
-                  activeBrand === i
-                    ? 'border-white/40 bg-white/10 text-white'
-                    : 'border-white/[0.08] text-white/40 hover:text-white/70 hover:border-white/20'
-                }`}
-              >
-                {b.name}
-              </button>
-            ))}
-          </div>
-
-          {/* Active brand panel */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 border border-white/[0.08]">
-            {/* Left — text */}
-            <div className="p-8 lg:p-12 xl:p-16 flex flex-col justify-between">
-              <div>
-                <div className="flex items-center gap-4 mb-8">
-                  <span className="font-inter text-xs tracking-widest uppercase text-white/30">{BRANDS[activeBrand].num} / 05</span>
-                  <span className="h-px flex-1 bg-white/[0.08]" />
-                  <span
-                    className="font-inter text-[10px] tracking-widest uppercase px-3 py-1 border"
-                    style={{ borderColor: BRANDS[activeBrand].color + '50', color: BRANDS[activeBrand].color, background: BRANDS[activeBrand].color + '15' }}
-                  >
-                    {BRANDS[activeBrand].age}
-                  </span>
-                </div>
-                <h3 className="font-podium uppercase text-white leading-none mb-6 break-words" style={{ fontSize: 'clamp(2.2rem,5vw,4.5rem)' }}>
-                  {BRANDS[activeBrand].name}
-                </h3>
-                <p className="font-inter text-white/50 text-sm sm:text-base leading-relaxed max-w-sm mb-8">
-                  {BRANDS[activeBrand].desc}
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {BRANDS[activeBrand].tags.map((t) => (
-                    <span key={t} className="font-inter text-[10px] tracking-wider uppercase px-3 py-1.5 border border-white/10 text-white/40">
-                      {t}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              <div className="mt-10 flex items-center gap-4 pt-8 border-t border-white/[0.08]">
-                <div className="flex gap-2">
-                  {BRANDS.map((_, i) => (
-                    <button
-                      key={i}
-                      onClick={() => setActiveBrand(i)}
-                      className="w-1.5 h-1.5 rounded-full transition-all duration-300"
-                      style={{ background: activeBrand === i ? '#fff' : 'rgba(255,255,255,0.2)', transform: activeBrand === i ? 'scale(1.5)' : 'scale(1)' }}
-                    />
-                  ))}
-                </div>
+          {/* Brand cards grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mb-3">
+            {BRANDS.map((b, i) => {
+              const isActive = activeBrand === i
+              return (
                 <button
-                  onClick={() => setActiveBrand((activeBrand + 1) % BRANDS.length)}
-                  className="ml-auto flex items-center gap-2 font-inter text-xs tracking-widest uppercase text-white/40 hover:text-white transition-colors"
+                  key={b.id}
+                  onClick={() => setActiveBrand(isActive ? -1 : i)}
+                  className="group text-left p-5 border transition-all duration-300 focus:outline-none"
+                  style={{
+                    borderColor: isActive ? b.color + '80' : 'rgba(255,255,255,0.07)',
+                    background: isActive ? b.color + '12' : 'rgba(255,255,255,0.02)',
+                  }}
                 >
-                  Siguiente <ChevronRight className="w-3.5 h-3.5" />
+                  {/* Top: num + indicator */}
+                  <div className="flex items-center justify-between mb-5">
+                    <span className="font-inter text-[10px] tracking-widest uppercase text-white/25">{b.num}</span>
+                    <div
+                      className="w-1.5 h-1.5 rounded-full transition-all duration-300"
+                      style={{ background: isActive ? b.color : 'rgba(255,255,255,0.15)' }}
+                    />
+                  </div>
+                  {/* Brand name */}
+                  <h3
+                    className="font-podium uppercase leading-tight mb-2 transition-colors duration-200 break-words"
+                    style={{
+                      fontSize: 'clamp(1.4rem,2.5vw,1.8rem)',
+                      color: isActive ? b.color : '#fff',
+                    }}
+                  >
+                    {b.name}
+                  </h3>
+                  {/* Desc */}
+                  <p className="font-inter text-white/40 text-xs leading-relaxed mb-4 line-clamp-2">{b.desc}</p>
+                  {/* Footer: venue count or soon */}
+                  <div className="flex items-center justify-between pt-3 border-t border-white/[0.07]">
+                    <span
+                      className="font-inter text-[10px] tracking-widest uppercase"
+                      style={{ color: b.venues.length > 0 ? b.color : 'rgba(255,255,255,0.25)' }}
+                    >
+                      {b.venues.length > 0 ? `${b.venues.length} discotecas` : 'Próximamente'}
+                    </span>
+                    <ChevronRight
+                      className="w-3.5 h-3.5 transition-all duration-300"
+                      style={{
+                        color: isActive ? b.color : 'rgba(255,255,255,0.2)',
+                        transform: isActive ? 'rotate(90deg)' : 'rotate(0deg)',
+                      }}
+                    />
+                  </div>
                 </button>
+              )
+            })}
+          </div>
+
+          {/* Venue grid — shown when brand with venues is selected */}
+          {activeBrand >= 0 && BRANDS[activeBrand].venues.length > 0 && (
+            <div
+              className="border border-white/[0.08] p-6 sm:p-8"
+              style={{ borderTopColor: BRANDS[activeBrand].color + '60' }}
+            >
+              {/* Venue section header */}
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-1 h-6 rounded-full" style={{ background: BRANDS[activeBrand].color }} />
+                <p className="font-inter text-[10px] tracking-[0.3em] uppercase text-white/40">
+                  Discotecas by{' '}
+                  <span style={{ color: BRANDS[activeBrand].color }}>
+                    @{BRANDS[activeBrand].name.toLowerCase()}
+                  </span>
+                </p>
+                <span className="ml-auto font-inter text-[10px] text-white/20 tracking-widest uppercase">
+                  {BRANDS[activeBrand].venues.length} salas
+                </span>
+              </div>
+
+              {/* Cards grid */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2.5">
+                {BRANDS[activeBrand].venues.map((venue) => (
+                  <a
+                    key={venue.name}
+                    href={venue.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group block border border-white/[0.07] p-4 hover:border-white/20 transition-all duration-200 hover:bg-white/[0.03]"
+                  >
+                    {/* Color pip */}
+                    <div
+                      className="w-5 h-0.5 mb-4 transition-all duration-200 group-hover:w-8"
+                      style={{ background: BRANDS[activeBrand].color }}
+                    />
+                    {/* Name */}
+                    <div className="font-podium text-white uppercase leading-tight mb-4 text-sm sm:text-base">
+                      {venue.name}
+                    </div>
+                    {/* CTA */}
+                    <div className="flex items-center gap-1 font-inter text-[10px] tracking-widest uppercase text-white/30 group-hover:text-white/70 transition-colors duration-200">
+                      Entradas <ArrowUpRight className="w-3 h-3 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    </div>
+                  </a>
+                ))}
               </div>
             </div>
-            {/* Right — image */}
-            <div className="relative overflow-hidden aspect-square lg:aspect-auto min-h-[300px]">
-              {BRANDS.map((b, i) => (
-                <div
-                  key={b.id}
-                  className="absolute inset-0 transition-opacity duration-700"
-                  style={{ opacity: activeBrand === i ? 1 : 0 }}
-                >
-                  <img src={b.img} alt={b.name} className="w-full h-full object-cover" />
-                  <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, rgba(8,8,8,0.6) 0%, transparent 60%)` }} />
-                  <div className="absolute bottom-0 left-0 right-0 h-40" style={{ background: `linear-gradient(0deg, rgba(8,8,8,0.8) 0%, transparent 100%)` }} />
-                  {/* Color accent */}
-                  <div className="absolute bottom-0 left-0 right-0 h-0.5" style={{ background: b.color }} />
-                </div>
-              ))}
+          )}
+
+          {/* Empty state — brand selected but no venues yet */}
+          {activeBrand >= 0 && BRANDS[activeBrand].venues.length === 0 && (
+            <div className="border border-white/[0.07] p-8 text-center">
+              <p className="font-inter text-white/25 text-sm tracking-widest uppercase">
+                Discotecas próximamente
+              </p>
             </div>
-          </div>
-        </RevealBlock>
+          )}
+
+        </div>
       </section>
 
       {/* ═══════════════════════════════════════════════
@@ -548,6 +593,11 @@ export default function App() {
           </RevealBlock>
         </div>
       </section>
+
+      {/* ═══════════════════════════════════════════════
+          RESEÑAS GOOGLE
+      ═══════════════════════════════════════════════ */}
+      <Reviews />
 
       {/* ═══════════════════════════════════════════════
           FOOTER
